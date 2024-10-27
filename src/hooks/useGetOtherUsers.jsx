@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
-import axios from "axios";
-import { useDispatch } from "react-redux";
+import axios from 'axios';
+import { useDispatch } from 'react-redux';
 import { setOtherUsers } from '../redux/userSlice';
-import { BASE_URL } from '..';
 
 const useGetOtherUsers = () => {
     const dispatch = useDispatch();
@@ -10,18 +9,23 @@ const useGetOtherUsers = () => {
     useEffect(() => {
         const fetchOtherUsers = async () => {
             try {
-                axios.defaults.withCredentials = true;
-                const res = await axios.get(`${BASE_URL}/api/v1/user`);
-                // store
-                console.log("other users -> ",res);
+                // Configure axios to include credentials
+                const res = await axios.get('https://chatwavebackend-r9s7.onrender.com/api/v1/user', {
+                    withCredentials: true,
+                });
+                
+                // Dispatch data to the Redux store
                 dispatch(setOtherUsers(res.data));
+                console.log("Other users -> ", res.data);
             } catch (error) {
-                console.log(error);
+                console.error("Error fetching other users:", error.message);
             }
-        }
+        };
+
         fetchOtherUsers();
-    }, [])
+    }, [dispatch]); // Include `dispatch` in the dependency array
 
-}
+    return null;
+};
 
-export default useGetOtherUsers
+export default useGetOtherUsers;
